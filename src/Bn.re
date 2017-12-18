@@ -1,5 +1,14 @@
 type t;
 
+/* ---- Arithmetic ---- */
+/* Add */
+[@bs.send.pipe : t] external add : t => t = "";
+
+[@bs.send.pipe : t] external iadd : t => t = "";
+
+[@bs.send.pipe : t] external iaddn : float => t = "";
+
+/* ---- Export ---- */
 /* To string */
 [@bs.send.pipe : t] external toStringWithBase : int => string = "toString";
 
@@ -29,6 +38,7 @@ let toArray = (~endian=?, ~length=?) =>
   | (None, None) => toArrayDefault()
   };
 
+/* ---- Creation ---- */
 /* From float */
 [@bs.module "bn.js"] [@bs.new] external numberFromFloat : float => t = "BN";
 

@@ -1,5 +1,11 @@
 type t;
 
+let add: (t, t) => t;
+
+let iadd: (t, t) => t;
+
+let iaddn: (float, t) => t;
+
 let toString: (~base: int=?, t) => string;
 
 let toArray: (~endian: Endianness.t=?, ~length: int=?, t) => array(int);
