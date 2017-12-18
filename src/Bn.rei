@@ -1,4 +1,6 @@
 type t;
 let toString: (~base: int=?, t) => string;
-let fromFloat: (~base: int=?, ~endianness: Endianness.t=?, float) => t;
-let fromString: (~base: int=?, ~endianness: Endianness.t=?, string) => t;
+let toArray: (~endian: Endianness.t=?, ~length: int=?, t) => array(int);
+let fromFloat: (~base: int=?, ~endian: Endianness.t=?, float) => t;
+let fromString: (~base: int=?, ~endian: Endianness.t=?, string) => t;
+let fromArray: (~base: int=?, ~endian: Endianness.t=?, array(int)) => t;

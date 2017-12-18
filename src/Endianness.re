@@ -1,1 +1,2 @@
-type t = [ `be | `le ];
+[@bs.deriving {jsConverter: newType}]
+type t = [ | `be | `le];

@@ -19,7 +19,8 @@ let _ =
           "accepts 52 bits of precision",
           () =>
             expect(
-              Bn.fromFloat(~base=10, Js.Math.pow_float(~base=2., ~exp=52.)) |> Bn.toString(~base=10)
+              Bn.fromFloat(~base=10, Js.Math.pow_float(~base=2., ~exp=52.))
+              |> Bn.toString(~base=10)
             )
             |> toBe("4503599627370496")
         );
@@ -27,7 +28,8 @@ let _ =
           "accepts max safe value",
           () => {
             let num = Js.Math.pow_float(~base=2., ~exp=53.) -. 1.;
-            expect(Bn.fromFloat(~base=10, num) |> Bn.toString(~base=10)) |> toBe("9007199254740991")
+            expect(Bn.fromFloat(~base=10, num) |> Bn.toString(~base=10))
+            |> toBe("9007199254740991")
           }
         );
         test(
@@ -40,7 +42,7 @@ let _ =
         test(
           "accepts two-limb LE number",
           () =>
-            expect(Bn.fromFloat(~endianness=`le, float_of_int(0x4123456)) |> Bn.toString(~base=16))
+            expect(Bn.fromFloat(~endian=`le, float_of_int(0x4123456)) |> Bn.toString(~base=16))
             |> toBe("56341204")
         )
       }
@@ -61,7 +63,8 @@ let _ =
         test(
           "accepts base-16 ex 2",
           () =>
-            expect(Bn.fromString(~base=16, "1A6B765D8CDF") |> Bn.toString) |> toBe("29048849665247")
+            expect(Bn.fromString(~base=16, "1A6B765D8CDF") |> Bn.toString)
+            |> toBe("29048849665247")
         );
         test(
           "accepts no base",
@@ -79,10 +82,99 @@ let _ =
         test(
           "accepts base-16 LE integer",
           () =>
-            expect(
-              Bn.fromString(~base=16, ~endianness=`le, "1A6B765D8CDF") |> Bn.toString(~base=16)
-            )
+            expect(Bn.fromString(~base=16, ~endian=`le, "1A6B765D8CDF") |> Bn.toString(~base=16))
             |> toBe("df8c5d766b1a")
+        )
+      }
+    )
+  );
+
+let _ =
+  describe(
+    "from array",
+    ExpectJs.(
+      () => {
+        test("accepts empty array", () => expect(Bn.fromArray([||]) |> Bn.toString) |> toBe("0"));
+        test(
+          "imports/exports big endian case 1",
+          () => expect(Bn.fromArray([|1, 2, 3|]) |> Bn.toString(~base=16)) |> toBe("10203")
+        );
+        test(
+          "imports/exports big endian case 2",
+          () => expect(Bn.fromArray([|1, 2, 3, 4|]) |> Bn.toString(~base=16)) |> toBe("1020304")
+        );
+        test(
+          "imports/exports big endian case 3",
+          () =>
+            expect(Bn.fromArray([|1, 2, 3, 4, 5|]) |> Bn.toString(~base=16)) |> toBe("102030405")
+        );
+        test(
+          "imports/exports big endian case 4",
+          () =>
+            expect(Bn.fromArray([|1, 2, 3, 4, 5, 6, 7, 8|]) |> Bn.toString(~base=16))
+            |> toBe("102030405060708")
+        );
+        test(
+          "imports/exports big endian case 5",
+          () =>
+            expect(Bn.fromArray([|1, 2, 3, 4|]) |> Bn.toArray |> Js.Array.joinWith(","))
+            |> toBe("1,2,3,4")
+        );
+        test(
+          "imports/exports big endian case 6",
+          () =>
+            expect(
+              Bn.fromArray([|1, 2, 3, 4, 5, 6, 7, 8|]) |> Bn.toArray |> Js.Array.joinWith(",")
+            )
+            |> toBe("1,2,3,4,5,6,7,8")
+        );
+        test(
+          "imports/exports little endian case 1",
+          () =>
+            expect(Bn.fromArray(~base=10, ~endian=`le, [|1, 2, 3|]) |> Bn.toString(~base=16))
+            |> toBe("30201")
+        );
+        test(
+          "imports/exports little endian case 2",
+          () =>
+            expect(Bn.fromArray(~base=10, ~endian=`le, [|1, 2, 3, 4|]) |> Bn.toString(~base=16))
+            |> toBe("4030201")
+        );
+        test(
+          "imports/exports little endian case 3",
+          () =>
+            expect(Bn.fromArray(~base=10, ~endian=`le, [|1, 2, 3, 4, 5|]) |> Bn.toString(~base=16))
+            |> toBe("504030201")
+        );
+        test(
+          "imports/exports little endian case 4",
+          () =>
+            expect(Bn.fromArray(~endian=`le, [|1, 2, 3, 4, 5, 6, 7, 8|]) |> Bn.toString(~base=16))
+            |> toBe("807060504030201")
+        );
+        test(
+          "imports/exports little endian case 5",
+          () =>
+            expect(
+              Bn.fromArray([|1, 2, 3, 4|]) |> Bn.toArray(~endian=`le) |> Js.Array.joinWith(",")
+            )
+            |> toBe("4,3,2,1")
+        );
+        test(
+          "imports/exports little endian case 6",
+          () =>
+            expect(
+              Bn.fromArray([|1, 2, 3, 4, 5, 6, 7, 8|])
+              |> Bn.toArray(~endian=`le)
+              |> Js.Array.joinWith(",")
+            )
+            |> toBe("8,7,6,5,4,3,2,1")
+        );
+        test(
+          "import little endian with implicit base",
+          () =>
+            expect(Bn.fromArray(~endian=`le, [|1, 2, 3, 4, 5|]) |> Bn.toString(~base=16))
+            |> toBe("504030201")
         )
       }
     )
