@@ -179,3 +179,47 @@ let _ =
       }
     )
   );
+
+let _ =
+  describe(
+    "from buffer",
+    ExpectJs.(
+      () => {
+        test(
+          "does not fail on empty Buffer",
+          () => expect(Bn.fromBuffer(Node.Buffer.fromString("")) |> Bn.toString) |> toBe("0")
+        );
+        test(
+          "imports/exports big endian",
+          /* TODO - Check if there's a way to set Buffer with 'hex' */
+          () =>
+            expect(Bn.fromBuffer(Node.Buffer.fromString("12345")) |> Bn.toString(~base=16))
+            |> toBe("3132333435")
+        );
+        test(
+          "imports/exports little endian",
+          /* TODO - Check if there's a way to set Buffer with 'hex' */
+          () =>
+            expect(
+              Bn.fromBuffer(~endian=`le, Node.Buffer.fromString("12345")) |> Bn.toString(~base=16)
+            )
+            |> toBe("3534333231")
+        )
+      }
+    )
+  );
+
+let _ =
+  describe(
+    "clone",
+    ExpectJs.(
+      () =>
+        test(
+          "clones an existing BN",
+          () => {
+            let num = Bn.fromFloat(12345.);
+            expect(Bn.clone(num) |> Bn.toString(~base=10)) |> toBe("12345")
+          }
+        )
+    )
+  );

@@ -35,18 +35,18 @@ let toArray = (~endian=?, ~length=?) =>
 [@bs.module "bn.js"] [@bs.new] external numberFromFloatWithBase : (float, int) => t = "BN";
 
 [@bs.module "bn.js"] [@bs.new]
-external numberFromFloatWithEndianness : (float, [@bs.string] [ | `le | `be]) => t =
+external numberFromFloatWithEndianness : (float, Endianness.abs_t) => t =
   "BN";
 
 [@bs.module "bn.js"] [@bs.new]
-external numberFromFloatWithBaseAndEndianness : (float, int, [@bs.string] [ | `le | `be]) => t =
+external numberFromFloatWithBaseAndEndianness : (float, int, Endianness.abs_t) => t =
   "BN";
 
 let fromFloat = (~base=?, ~endian=?, v) =>
   switch (base, endian) {
-  | (Some(b), Some(e)) => numberFromFloatWithBaseAndEndianness(v, b, e)
+  | (Some(b), Some(e)) => numberFromFloatWithBaseAndEndianness(v, b, Endianness.tToJs(e))
   | (Some(b), None) => numberFromFloatWithBase(v, b)
-  | (None, Some(e)) => numberFromFloatWithEndianness(v, e)
+  | (None, Some(e)) => numberFromFloatWithEndianness(v, Endianness.tToJs(e))
   | (None, None) => numberFromFloat(v)
   };
 
@@ -56,18 +56,18 @@ let fromFloat = (~base=?, ~endian=?, v) =>
 [@bs.module "bn.js"] [@bs.new] external numberFromStringWithBase : (string, int) => t = "BN";
 
 [@bs.module "bn.js"] [@bs.new]
-external numberFromStringWithEndianness : (string, [@bs.string] [ | `le | `be]) => t =
+external numberFromStringWithEndianness : (string, Endianness.abs_t) => t =
   "BN";
 
 [@bs.module "bn.js"] [@bs.new]
-external numberFromStringWithBaseAndEndianness : (string, int, [@bs.string] [ | `le | `be]) => t =
+external numberFromStringWithBaseAndEndianness : (string, int, Endianness.abs_t) => t =
   "BN";
 
 let fromString = (~base=?, ~endian=?, v) =>
   switch (base, endian) {
-  | (Some(b), Some(e)) => numberFromStringWithBaseAndEndianness(v, b, e)
+  | (Some(b), Some(e)) => numberFromStringWithBaseAndEndianness(v, b, Endianness.tToJs(e))
   | (Some(b), None) => numberFromStringWithBase(v, b)
-  | (None, Some(e)) => numberFromStringWithEndianness(v, e)
+  | (None, Some(e)) => numberFromStringWithEndianness(v, Endianness.tToJs(e))
   | (None, None) => numberFromString(v)
   };
 
@@ -77,17 +77,42 @@ let fromString = (~base=?, ~endian=?, v) =>
 [@bs.module "bn.js"] [@bs.new] external numberFromArrayWithBase : (array(int), int) => t = "BN";
 
 [@bs.module "bn.js"] [@bs.new]
-external numberFromArrayWithEndianness : (array(int), [@bs.string] [ | `le | `be]) => t =
+external numberFromArrayWithEndianness : (array(int), Endianness.abs_t) => t =
   "BN";
 
 [@bs.module "bn.js"] [@bs.new]
-external numberFromArrayWithBaseAndEndianness : (array(int), int, [@bs.string] [ | `le | `be]) => t =
+external numberFromArrayWithBaseAndEndianness : (array(int), int, Endianness.abs_t) => t =
   "BN";
 
 let fromArray = (~base=?, ~endian=?, v) =>
   switch (base, endian) {
-  | (Some(b), Some(e)) => numberFromArrayWithBaseAndEndianness(v, b, e)
+  | (Some(b), Some(e)) => numberFromArrayWithBaseAndEndianness(v, b, Endianness.tToJs(e))
   | (Some(b), None) => numberFromArrayWithBase(v, b)
-  | (None, Some(e)) => numberFromArrayWithEndianness(v, e)
+  | (None, Some(e)) => numberFromArrayWithEndianness(v, Endianness.tToJs(e))
   | (None, None) => numberFromArray(v)
   };
+
+/* From buffer */
+[@bs.module "bn.js"] [@bs.new] external numberFromBuffer : Node.Buffer.t => t = "BN";
+
+[@bs.module "bn.js"] [@bs.new] external numberFromBufferWithBase : (Node.Buffer.t, int) => t =
+  "BN";
+
+[@bs.module "bn.js"] [@bs.new]
+external numberFromBufferWithEndianness : (Node.Buffer.t, Endianness.abs_t) => t =
+  "BN";
+
+[@bs.module "bn.js"] [@bs.new]
+external numberFromBufferWithBaseAndEndianness : (Node.Buffer.t, int, Endianness.abs_t) => t =
+  "BN";
+
+let fromBuffer = (~base=?, ~endian=?, v) =>
+  switch (base, endian) {
+  | (Some(b), Some(e)) => numberFromBufferWithBaseAndEndianness(v, b, Endianness.tToJs(e))
+  | (Some(b), None) => numberFromBufferWithBase(v, b)
+  | (None, Some(e)) => numberFromBufferWithEndianness(v, Endianness.tToJs(e))
+  | (None, None) => numberFromBuffer(v)
+  };
+
+/* Clone */
+[@bs.module "bn.js"] [@bs.new] external clone : t => t = "BN";
