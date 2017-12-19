@@ -4,9 +4,25 @@ type t;
 /* Add */
 [@bs.send.pipe : t] external add : t => t = "";
 
+[@bs.send.pipe : t] external addn : float => t = "";
+
 [@bs.send.pipe : t] external iadd : t => t = "";
 
 [@bs.send.pipe : t] external iaddn : float => t = "";
+
+[@bs.send.pipe : t] external sub : t => t = "";
+
+[@bs.send.pipe : t] external subn : float => t = "";
+
+[@bs.send.pipe : t] external isub : t => t = "";
+
+[@bs.send.pipe : t] external isubn : float => t = "";
+
+[@bs.send.pipe : t] external cmp : t => Equality.abs_t = "";
+
+let cmp = (a, b) => Equality.tFromJs(cmp(a, b));
+
+[@bs.send] external neg : t => t = "";
 
 /* ---- Export ---- */
 /* To string */
