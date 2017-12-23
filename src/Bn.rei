@@ -23,9 +23,15 @@ let mulf: (t, t) => t;
 
 let imul: (t, t) => unit;
 
-let imuln: (t, t) => unit;
+let imuln: (float, t) => unit;
 
-let muln: (t, t) => t;
+let muln: (float, t) => t;
+
+let sqr: t => t;
+
+let isqr: t => unit;
+
+let pow: (t, t) => t;
 
 let div: (t, t) => t;
 
@@ -35,11 +41,11 @@ let umod: (t, t) => t;
 
 let divRound: (t, t) => t;
 
-let modrn: (t, t) => t;
+let modrn: (float, t) => t;
 
-let idivn: (t, t) => unit;
+let idivn: (float, t) => unit;
 
-let divn: (t, t) => t;
+let divn: (float, t) => t;
 
 let cmp: (t, t) => Equality.t;
 

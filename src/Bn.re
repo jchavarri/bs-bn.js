@@ -24,9 +24,15 @@ type t;
 
 [@bs.send.pipe : t] external imul : t => unit = "";
 
-[@bs.send.pipe : t] external imuln : t => unit = "";
+[@bs.send.pipe : t] external imuln : float => unit = "";
 
-[@bs.send.pipe : t] external muln : t => t = "";
+[@bs.send.pipe : t] external muln : float => t = "";
+
+[@bs.send] external sqr : t => t = "";
+
+[@bs.send] external isqr : t => unit = "";
+
+[@bs.send.pipe : t] external pow : t => t = "";
 
 [@bs.send.pipe : t] external div : t => t = "";
 
@@ -36,11 +42,11 @@ type t;
 
 [@bs.send.pipe : t] external divRound : t => t = "";
 
-[@bs.send.pipe : t] external modrn : t => t = "";
+[@bs.send.pipe : t] external modrn : float => t = "";
 
-[@bs.send.pipe : t] external idivn : t => unit = "";
+[@bs.send.pipe : t] external idivn : float => unit = "";
 
-[@bs.send.pipe : t] external divn : t => t = "";
+[@bs.send.pipe : t] external divn : float => t = "";
 
 [@bs.send.pipe : t] external cmp : t => Equality.abs_t = "";
 

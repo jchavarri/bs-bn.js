@@ -1,6 +1,6 @@
 open Jest;
 
-let _ =
+let () =
   describe(
     "add",
     ExpectJs.(
@@ -39,7 +39,7 @@ let _ =
     )
   );
 
-let _ =
+let () =
   describe(
     "iaddn",
     ExpectJs.(
@@ -74,7 +74,7 @@ let _ =
     )
   );
 
-let _ =
+let () =
   describe(
     "sub",
     ExpectJs.(
@@ -132,7 +132,7 @@ let _ =
     )
   );
 
-let _ =
+let () =
   describe(
     "isubn",
     ExpectJs.(
@@ -245,3 +245,87 @@ let testMethod = (name, mul) =>
 testMethod("mul", Bn.mul);
 
 testMethod("mulf", Bn.mulf);
+
+let () =
+  describe(
+    "imul",
+    ExpectJs.(
+      () => {
+        test("multiplies numbers in place", () => {
+          let a = Bn.fromString(~base=16, "abcdef01234567890abcd");
+          let b = Bn.fromString(~base=16, "abcdef01234567890abcd");
+          let c = Bn.mul(b, a);
+          Bn.imul(b, a);
+          expect(a |> Bn.toString(~base=16))
+          |> toBe(c |> Bn.toString(~base=16));
+        });
+        test("multiplies large numbers in place", () => {
+          let a =
+            Bn.fromString(
+              ~base=16,
+              "abcdef01234567890abcd214a25123f512361e6d236"
+            );
+          let b =
+            Bn.fromString(
+              ~base=16,
+              "deadbeefa551edebabba8121234fd21bac0341324dd"
+            );
+          let c = Bn.mul(b, a);
+          Bn.imul(b, a);
+          expect(a |> Bn.toString(~base=16))
+          |> toBe(c |> Bn.toString(~base=16));
+        });
+        test("multiplies by 0", () => {
+          let a = Bn.fromString(~base=16, "abcdef01234567890abcd");
+          let b = Bn.fromString(~base=16, "0");
+          let c = Bn.mul(b, a);
+          Bn.imul(b, a);
+          expect(a |> Bn.toString(~base=16))
+          |> toBe(c |> Bn.toString(~base=16));
+        });
+        test("regresses mul big numbers in-place", () => {
+          let qs = Fixtures.DhGroups.P17.qs;
+          let q = Bn.fromString(~base=16, Fixtures.DhGroups.P17.q);
+          Bn.isqr(q);
+          expect(q |> Bn.toString(~base=16)) |> toBe(qs);
+        });
+      }
+    )
+  );
+
+let () =
+  describe(
+    "muln",
+    ExpectJs.(
+      () => {
+        test("multiplies number by small number", () => {
+          let a = Bn.fromString(~base=16, "abcdef01234567890abcd");
+          let b = Bn.fromString(~base=16, "dead");
+          let c = Bn.mul(b, a);
+          expect(Bn.muln(float_of_int(0xdead), a) |> Bn.toString(~base=16))
+          |> toBe(c |> Bn.toString(~base=16));
+        });
+        test("throws with num eq 0x4000000", () =>
+          expect(() =>
+            Bn.fromFloat(0.) |> Bn.imuln(float_of_int(0x4000000))
+          )
+          |> toThrow
+        );
+      }
+    )
+  );
+
+let () =
+  describe(
+    "pow",
+    ExpectJs.(
+      () =>
+        test("raises number to the power", () => {
+          let a = Bn.fromString(~base=16, "ab");
+          let b = Bn.fromString(~base=10, "13");
+          let c = Bn.pow(b, a);
+          expect(c |> Bn.toString(~base=16))
+          |> toBe("15963da06977df51909c9ba5b");
+        })
+    )
+  );
