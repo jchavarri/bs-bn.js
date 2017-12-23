@@ -49,6 +49,8 @@ let divn: (float, t) => t;
 
 let cmp: (t, t) => Equality.t;
 
+let cmpn: (float, t) => Equality.t;
+
 let neg: t => t;
 
 let isNeg: t => bool;
@@ -70,6 +72,8 @@ let shrn: (int, t) => t;
 let ushrn: (int, t) => t;
 
 /* Export */
+let toNumber: t => float;
+
 let toString: (~base: int=?, t) => string;
 
 let toArray: (~endian: Endianness.t=?, ~length: int=?, t) => array(int);

@@ -329,3 +329,272 @@ let () =
         })
     )
   );
+
+let () =
+  describe(
+    "div",
+    ExpectJs.(
+      () => {
+        [
+          (256, 10, 25),
+          ((-256), 10, (-25)),
+          (256, (-10), (-25)),
+          ((-256), (-10), 25)
+        ]
+        |> List.iter(((x, y, r)) =>
+             test("divides small numbers (<=26 bits)", () => {
+               let a = Bn.fromFloat(float_of_int(x));
+               let b = Bn.fromFloat(float_of_int(y));
+               let c = Bn.div(b, a);
+               expect(c |> Bn.toString(~base=10)) |> toBe(string_of_int(r));
+             })
+           );
+        [
+          ("1222222225255589", "611111124969028", "1"),
+          ("-1222222225255589", "611111124969028", "-1"),
+          ("1222222225255589", "-611111124969028", "-1"),
+          ("-1222222225255589", "-611111124969028", "1"),
+          ("611111124969028", "1222222225255589", "0"),
+          ("-611111124969028", "1222222225255589", "0"),
+          ("611111124969028", "-1222222225255589", "0"),
+          ("-611111124969028", "-1222222225255589", "0")
+        ]
+        |> List.iter(((x, y, r)) =>
+             test("divides large numbers (>53 bits)", () => {
+               let a = Bn.fromString(x);
+               let b = Bn.fromString(y);
+               let c = Bn.div(b, a);
+               expect(c |> Bn.toString(~base=10)) |> toBe(r);
+             })
+           );
+        [
+          ("69527932928", "16974594", "fff"),
+          ("-69527932928", "16974594", "-fff")
+        ]
+        |> List.iter(((x, y, r)) =>
+             test("divides dec numbers", () => {
+               let a = Bn.fromString(x);
+               let b = Bn.fromString(y);
+               let c = Bn.div(b, a);
+               expect(c |> Bn.toString(~base=16)) |> toBe(r);
+             })
+           );
+        test("divides hex numbers", () => {
+          let a =
+            Bn.fromString(
+              ~base=16,
+              "39e58a8055b6fb264b75ec8c646509784204ac15a8c24e05babc9729ab9"
+              ++ "b055c3a9458e4ce3289560a38e08ba8175a9446ce14e608245ab3a9"
+              ++ "978a8bd8acaa40"
+            );
+          let b =
+            Bn.fromString(
+              ~base=16,
+              "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+            );
+          expect(Bn.div(b, a) |> Bn.toString(~base=16))
+          |> toBe(b |> Bn.toString(~base=16));
+        });
+      }
+    )
+  );
+
+let () =
+  describe(
+    "idivn",
+    ExpectJs.(
+      () =>
+        [
+          ("10", 3., "5", 16),
+          ("12", 3., "6", 16),
+          ("10000000000000000", 3., "3333333333333333", 10),
+          (
+            "100000000000000000000000000000",
+            3.,
+            "33333333333333333333333333333",
+            10
+          )
+        ]
+        |> List.iter(((x, n, r, base)) =>
+             test("divides numbers in-place", () => {
+               let a = Bn.fromString(~base, x);
+               Bn.idivn(n, a);
+               expect(a |> Bn.toString(~base)) |> toBe(r);
+             })
+           )
+    )
+  );
+
+let () =
+  describe(
+    "divRound",
+    ExpectJs.(
+      () => {
+        [
+          (9, 20, 0),
+          (10, 20, 1),
+          (150, 20, 8),
+          (149, 20, 7),
+          (149, 17, 9),
+          (144, 17, 8),
+          ((-144), 17, (-8))
+        ]
+        |> List.iter(((x, y, r)) =>
+             test("divides numbers with rounding", () => {
+               let a = Bn.fromFloat(float_of_int(x));
+               let b = Bn.fromFloat(float_of_int(y));
+               expect(Bn.divRound(b, a) |> Bn.toString)
+               |> toBe(string_of_int(r));
+             })
+           );
+        test("returns 1 on exact division", () => {
+          let a = Bn.fromFloat(144.);
+          let b = Bn.fromFloat(144.);
+          expect(Bn.divRound(b, a) |> Bn.toString) |> toBe("1");
+        });
+      }
+    )
+  );
+
+let () =
+  describe(
+    "mod",
+    ExpectJs.(
+      () => {
+        [
+          (256, 10, 6),
+          ((-256), 10, (-6)),
+          (256, (-10), 6),
+          ((-256), (-10), (-6)),
+          (10, 256, 10),
+          ((-10), 256, (-10)),
+          (10, (-256), 10),
+          ((-10), (-256), (-10))
+        ]
+        |> List.iter(((x, y, r)) =>
+             test("modulos small numbers (<=26 bits)", () => {
+               let a = Bn.fromFloat(float_of_int(x));
+               let b = Bn.fromFloat(float_of_int(y));
+               expect(Bn.mod_(b, a) |> Bn.toString) |> toBe(string_of_int(r));
+             })
+           );
+        [
+          ("1222222225255589", "611111124969028", "611111100286561"),
+          ("-1222222225255589", "611111124969028", "-611111100286561"),
+          ("1222222225255589", "-611111124969028", "611111100286561"),
+          ("-1222222225255589", "-611111124969028", "-611111100286561"),
+          ("611111124969028", "1222222225255589", "611111124969028"),
+          ("-611111124969028", "1222222225255589", "-611111124969028"),
+          ("611111124969028", "-1222222225255589", "611111124969028"),
+          ("-611111124969028", "-1222222225255589", "-611111124969028")
+        ]
+        |> List.iter(((x, y, r)) =>
+             test("modulos large numbers (>53 bits)", () => {
+               let a = Bn.fromString(x);
+               let b = Bn.fromString(y);
+               expect(Bn.mod_(b, a) |> Bn.toString) |> toBe(r);
+             })
+           );
+        [("10", "256", "a"), ("69527932928", "16974594", "102f302")]
+        |> List.iter(((x, y, r)) =>
+             test("modulos numbers 1", () => {
+               let a = Bn.fromString(x);
+               let b = Bn.fromString(y);
+               expect(Bn.mod_(b, a) |> Bn.toString(~base=16)) |> toBe(r);
+             })
+           );
+        [
+          (178, 10, 17, 8, 8),
+          ((-178), 10, (-17), (-8), 2),
+          (178, (-10), (-17), 8, 8),
+          ((-178), (-10), 17, (-8), 2),
+          ((-4), (-3), 1, (-1), 2)
+        ]
+        |> List.iter(((x, y, rDiv, rMod, rUmod)) => {
+             let a = Bn.fromFloat(float_of_int(x));
+             let b = Bn.fromFloat(float_of_int(y));
+             test("modulos numbers 2 - div", () =>
+               expect(Bn.div(b, a) |> Bn.toNumber) |> toBe(float_of_int(rDiv))
+             );
+             test("modulos numbers 2 - mod", () =>
+               expect(Bn.mod_(b, a) |> Bn.toNumber) |> toBe(float_of_int(rMod))
+             );
+             test("modulos numbers 2 - umod", () =>
+               expect(Bn.umod(b, a) |> Bn.toNumber)
+               |> toBe(float_of_int(rUmod))
+             );
+           });
+        test("carries the sign inside division", () => {
+          let a =
+            Bn.fromString(
+              ~base=16,
+              "945304eb96065b2a98b57a48a06ae28d285a71b5"
+            );
+          let b =
+            Bn.fromString(
+              ~base=16,
+              "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe"
+            );
+          expect(a |> Bn.mul(b) |> Bn.mod_(a) |> Bn.cmpn(0.))
+          |> toBe(Equality.Equal);
+        });
+      }
+    )
+  );
+
+let () =
+  describe(
+    "mod",
+    ExpectJs.(
+      () =>
+        test("carries the sign inside division", () => {
+          let a =
+            Bn.fromString(
+              ~base=16,
+              "945304eb96065b2a98b57a48a06ae28d285a71b5"
+            );
+          let b =
+            Bn.fromString(
+              ~base=16,
+              "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe"
+            );
+          expect(a |> Bn.mul(b) |> Bn.mod_(a) |> Bn.cmpn(0.))
+          |> toBe(Equality.Equal);
+        })
+    )
+  );
+
+let () =
+  describe(
+    "modrn",
+    ExpectJs.(
+      () =>
+        [
+          ("10", 256, "10"),
+          ("100", 256, "0"),
+          ("1001", 256, "1"),
+          ("100000000001", 256, "1"),
+          (
+            "100000000001",
+            257,
+            Bn.fromString(~base=16, "100000000001")
+            |> Bn.mod_(Bn.fromFloat(257.))
+            |> Bn.toString(~base=16)
+          ),
+          (
+            "123456789012",
+            3,
+            Bn.fromString(~base=16, "123456789012")
+            |> Bn.mod_(Bn.fromFloat(3.))
+            |> Bn.toString(~base=16)
+          )
+        ]
+        |> List.iter(((x, y, r)) =>
+             test("act like mod on small numbers", () => {
+               let a = Bn.fromString(~base=16, x);
+               expect(a |> Bn.modrn(float_of_int(y)) |> Bn.toString(~base=16))
+               |> toBe(r);
+             })
+           )
+    )
+  );

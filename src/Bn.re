@@ -52,6 +52,10 @@ type t;
 
 let cmp = (a, b) => Equality.tFromJs(cmp(a, b));
 
+[@bs.send.pipe : t] external cmpn : float => Equality.abs_t = "";
+
+let cmpn = (a, b) => Equality.tFromJs(cmpn(a, b));
+
 [@bs.send.pipe : t] external iushln : int => unit = "";
 
 [@bs.send.pipe : t] external ishln : int => unit = "";
@@ -74,6 +78,8 @@ let cmp = (a, b) => Equality.tFromJs(cmp(a, b));
 
 /* ---- Export ---- */
 /* To string */
+[@bs.send] external toNumber : t => float = "";
+
 [@bs.send.pipe : t] external toStringWithBase : int => string = "toString";
 
 [@bs.send.pipe : t] external toStringDefault : unit => string = "toString";
