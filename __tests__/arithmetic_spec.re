@@ -592,9 +592,153 @@ let () =
         |> List.iter(((x, y, r)) =>
              test("act like mod on small numbers", () => {
                let a = Bn.fromString(~base=16, x);
-               expect(a |> Bn.modrn(float_of_int(y)) |> Bn.toString(~base=16))
+               expect(a |> Bn.modn(float_of_int(y)) |> Bn.toString(~base=16))
                |> toBe(r);
              })
            )
+    )
+  );
+
+let () =
+  describe(
+    "abs",
+    ExpectJs.(
+      () => {
+        [(0x1001, "4097"), ((-0x1001), "4097")]
+        |> List.iter(((x, r)) =>
+             test("returns absolute value", () => {
+               let a = Bn.fromFloat(float_of_int(x));
+               expect(a |> Bn.abs |> Bn.toString) |> toBe(r);
+             })
+           );
+        test("returns absolute value for long numbers", () => {
+          let a = Bn.fromString(~base=16, "ffffffff");
+          expect(a |> Bn.abs |> Bn.toString) |> toBe("4294967295");
+        });
+      }
+    )
+  );
+
+let () =
+  describe(
+    "invm",
+    ExpectJs.(
+      () =>
+        [
+          ("257", "3"),
+          ("fffffffffffffffffffffffffffffffeffffffffffffffff", "deadbeef"),
+          ("872d9b030ba368706b68932cf07a0e0c", "65537"),
+          ("5", "6")
+        ]
+        |> List.iter(((x, y)) =>
+             test("inverts relatively-prime numbers", () => {
+               let p = Bn.fromString(~base=16, x);
+               let a = Bn.fromString(~base=16, y);
+               let b = a |> Bn.invm(p);
+               expect(a |> Bn.mul(b) |> Bn.mod_(p) |> Bn.toString(~base=16))
+               |> toBe("1");
+             })
+           )
+    )
+  );
+
+let () =
+  describe(
+    "gcd",
+    ExpectJs.(
+      () =>
+        [
+          (3, 2, "1"),
+          (18, 12, "6"),
+          ((-18), 12, "6"),
+          ((-18), (-12), "6"),
+          ((-18), 0, "18"),
+          (0, (-18), "18"),
+          (2, 0, "2"),
+          (0, 3, "3"),
+          (0, 0, "0")
+        ]
+        |> List.iter(((x, y, r)) =>
+             test("returns GCD", () => {
+               let a = Bn.fromFloat(float_of_int(x));
+               let b = Bn.fromFloat(float_of_int(y));
+               expect(a |> Bn.gcd(b) |> Bn.toString) |> toBe(r);
+             })
+           )
+    )
+  );
+
+let () =
+  describe(
+    "egcd",
+    ExpectJs.(
+      () => {
+        [(3, 2, "1"), (18, 12, "6"), ((-18), 12, "6"), (0, 12, "12")]
+        |> List.iter(((x, y, r)) =>
+             test("returns EGCD", () => {
+               let a = Bn.fromFloat(float_of_int(x));
+               let b = Bn.fromFloat(float_of_int(y));
+               let result = a |> Bn.egcd(b);
+               expect(result.gcd |> Bn.toString) |> toBe(r);
+             })
+           );
+        test("does not allow 0 input", () =>
+          expect(() =>
+            Bn.fromString("1") |> Bn.egcd(Bn.fromString("0"))
+          )
+          |> toThrow
+        );
+        test("does not allow negative input", () =>
+          expect(() =>
+            Bn.fromString("1") |> Bn.egcd(Bn.fromString("-1"))
+          )
+          |> toThrow
+        );
+      }
+    )
+  );
+
+let () =
+  describe(
+    "max",
+    ExpectJs.(
+      () =>
+        [(3, 2, "3"), (2, 3, "3"), (2, 2, "2"), (2, (-2), "2")]
+        |> List.iter(((x, y, r)) =>
+             test("returns maximum", () => {
+               let a = Bn.fromFloat(float_of_int(x));
+               let b = Bn.fromFloat(float_of_int(y));
+               expect(a |> Bn.max(b) |> Bn.toString) |> toBe(r);
+             })
+           )
+    )
+  );
+
+let () =
+  describe(
+    "min",
+    ExpectJs.(
+      () =>
+        [(3, 2, "2"), (2, 3, "2"), (2, 2, "2"), (2, (-2), "-2")]
+        |> List.iter(((x, y, r)) =>
+             test("returns minimun", () => {
+               let a = Bn.fromFloat(float_of_int(x));
+               let b = Bn.fromFloat(float_of_int(y));
+               expect(a |> Bn.min(b) |> Bn.toString) |> toBe(r);
+             })
+           )
+    )
+  );
+
+let () =
+  describe(
+    "ineg",
+    ExpectJs.(
+      () =>
+        test("does not change sign for zero", () => {
+          let a = Bn.fromString("0");
+          Bn.ineg(a);
+          expect(a |> Bn.toString) |> toBe("0");
+        })
     )
   );

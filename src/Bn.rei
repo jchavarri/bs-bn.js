@@ -1,5 +1,12 @@
 type t;
 
+[@bs.deriving {jsConverter: newType}]
+type egcd_t = {
+  a: t,
+  b: t,
+  gcd: t
+};
+
 /* Arithmetic */
 let add: (t, t) => t;
 
@@ -16,6 +23,10 @@ let subn: (float, t) => t;
 let isub: (t, t) => unit;
 
 let isubn: (float, t) => unit;
+
+let abs: t => t;
+
+let iabs: t => unit;
 
 let mul: (t, t) => t;
 
@@ -41,7 +52,7 @@ let umod: (t, t) => t;
 
 let divRound: (t, t) => t;
 
-let modrn: (float, t) => t;
+let modn: (float, t) => t;
 
 let idivn: (float, t) => unit;
 
@@ -53,7 +64,15 @@ let cmpn: (float, t) => Equality.t;
 
 let neg: t => t;
 
+let ineg: t => unit;
+
 let isNeg: t => bool;
+
+let invm: (t, t) => t;
+
+let gcd: (t, t) => t;
+
+let egcd: (t, t) => egcd_t;
 
 let iushln: (int, t) => unit;
 
@@ -70,6 +89,10 @@ let ushln: (int, t) => t;
 let shrn: (int, t) => t;
 
 let ushrn: (int, t) => t;
+
+let max: (t, t) => t;
+
+let min: (t, t) => t;
 
 /* Export */
 let toNumber: t => float;

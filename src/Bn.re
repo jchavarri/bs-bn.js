@@ -1,5 +1,12 @@
 type t;
 
+[@bs.deriving {jsConverter: newType}]
+type egcd_t = {
+  a: t,
+  b: t,
+  gcd: t
+};
+
 /* ---- Arithmetic ---- */
 /* Add */
 [@bs.send.pipe : t] external add : t => t = "";
@@ -17,6 +24,10 @@ type t;
 [@bs.send.pipe : t] external isub : t => unit = "";
 
 [@bs.send.pipe : t] external isubn : float => unit = "";
+
+[@bs.send] external abs : t => t = "";
+
+[@bs.send] external iabs : t => unit = "";
 
 [@bs.send.pipe : t] external mul : t => t = "";
 
@@ -42,7 +53,7 @@ type t;
 
 [@bs.send.pipe : t] external divRound : t => t = "";
 
-[@bs.send.pipe : t] external modrn : float => t = "";
+[@bs.send.pipe : t] external modn : float => t = "";
 
 [@bs.send.pipe : t] external idivn : float => unit = "";
 
@@ -55,6 +66,20 @@ let cmp = (a, b) => Equality.tFromJs(cmp(a, b));
 [@bs.send.pipe : t] external cmpn : float => Equality.abs_t = "";
 
 let cmpn = (a, b) => Equality.tFromJs(cmpn(a, b));
+
+[@bs.send] external neg : t => t = "";
+
+[@bs.send] external ineg : t => unit = "";
+
+[@bs.send] external isNeg : t => bool = "";
+
+[@bs.send.pipe : t] external invm : t => t = "";
+
+[@bs.send.pipe : t] external gcd : t => t = "";
+
+[@bs.send.pipe : t] external egcd : t => abs_egcd_t = "";
+
+let egcd = (a, b) => egcd_tFromJs(egcd(a, b));
 
 [@bs.send.pipe : t] external iushln : int => unit = "";
 
@@ -72,9 +97,9 @@ let cmpn = (a, b) => Equality.tFromJs(cmpn(a, b));
 
 [@bs.send.pipe : t] external ushrn : int => t = "";
 
-[@bs.send] external neg : t => t = "";
+[@bs.module "bn.js"] external max : (t, t) => t = "";
 
-[@bs.send] external isNeg : t => bool = "";
+[@bs.module "bn.js"] external min : (t, t) => t = "";
 
 /* ---- Export ---- */
 /* To string */
