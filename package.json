@@ -28,5 +28,7 @@
     "bs-jest": "reasonml-community/bs-jest",
     "bs-platform": "^2.1.0"
   },
-  "dependencies": {}
+  "peerDependencies": {
+    "bn.js": "^4.0.0"
+  }
 }
