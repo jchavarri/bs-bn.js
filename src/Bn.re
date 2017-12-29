@@ -67,11 +67,51 @@ let cmp = (a, b) => Equality.tFromJs(cmp(a, b));
 
 let cmpn = (a, b) => Equality.tFromJs(cmpn(a, b));
 
+[@bs.send.pipe : t] external ucmp : t => Equality.abs_t = "";
+
+let ucmp = (a, b) => Equality.tFromJs(ucmp(a, b));
+
+[@bs.send.pipe : t] external gtn : float => bool = "";
+
+[@bs.send.pipe : t] external gt : t => bool = "";
+
+[@bs.send.pipe : t] external gten : float => bool = "";
+
+[@bs.send.pipe : t] external gte : t => bool = "";
+
+[@bs.send.pipe : t] external ltn : float => bool = "";
+
+[@bs.send.pipe : t] external lt : t => bool = "";
+
+[@bs.send.pipe : t] external lten : float => bool = "";
+
+[@bs.send.pipe : t] external lte : t => bool = "";
+
+[@bs.send.pipe : t] external eqn : float => bool = "";
+
+[@bs.send.pipe : t] external eq : t => bool = "";
+
 [@bs.send] external neg : t => t = "";
 
 [@bs.send] external ineg : t => unit = "";
 
 [@bs.send] external isNeg : t => bool = "";
+
+[@bs.send] external isOdd : t => bool = "";
+
+[@bs.send] external isEven : t => bool = "";
+
+[@bs.send] external isZero : t => bool = "";
+
+[@bs.send] external bitLength : t => int = "";
+
+[@bs.send] external byteLength : t => int = "";
+
+[@bs.send.pipe : t] external toTwos : int => t = "";
+
+[@bs.send.pipe : t] external fromTwos : int => t = "";
+
+[@bs.send] external zeroBits : t => int = "";
 
 [@bs.send.pipe : t] external invm : t => t = "";
 
@@ -105,14 +145,24 @@ let egcd = (a, b) => egcd_tFromJs(egcd(a, b));
 /* To string */
 [@bs.send] external toNumber : t => float = "";
 
+[@bs.send] external toJSON : t => string = "";
+
+[@bs.send.pipe : t]
+external toStringWithBaseAndPadding : (int, int) => string = "toString";
+
+[@bs.send.pipe : t]
+external toStringWithPadding : (int, int) => string = "toString";
+
 [@bs.send.pipe : t] external toStringWithBase : int => string = "toString";
 
 [@bs.send.pipe : t] external toStringDefault : unit => string = "toString";
 
-let toString = (~base=?) =>
-  switch base {
-  | Some(b) => toStringWithBase(b)
-  | None => toStringDefault()
+let toString = (~base=?, ~padding=?) =>
+  switch (base, padding) {
+  | (Some(b), Some(p)) => toStringWithBaseAndPadding(b, p)
+  | (Some(b), None) => toStringWithBase(b)
+  | (None, Some(p)) => toStringWithPadding(10, p)
+  | (None, None) => toStringDefault()
   };
 
 /* To array */
@@ -133,6 +183,28 @@ let toArray = (~endian=?, ~length=?) =>
   | (Some(e), None) => toArrayWithEndian(Endianness.tToJs(e))
   | (None, Some(l)) => toArrayWithLength(l)
   | (None, None) => toArrayDefault()
+  };
+
+/* To Buffer */
+[@bs.send.pipe : t]
+external toBufferWithEndian : Endianness.abs_t => Node.Buffer.t = "toBuffer";
+
+[@bs.send.pipe : t]
+external toBufferWithLength : int => Node.Buffer.t = "toBuffer";
+
+[@bs.send.pipe : t]
+external toBufferWithEndianAndLength : (Endianness.abs_t, int) => Node.Buffer.t =
+  "toBuffer";
+
+[@bs.send.pipe : t]
+external toBufferDefault : unit => Node.Buffer.t = "toBuffer";
+
+let toBuffer = (~endian=?, ~length=?) =>
+  switch (endian, length) {
+  | (Some(e), Some(l)) => toBufferWithEndianAndLength(Endianness.tToJs(e), l)
+  | (Some(e), None) => toBufferWithEndian(Endianness.tToJs(e))
+  | (None, Some(l)) => toBufferWithLength(l)
+  | (None, None) => toBufferDefault()
   };
 
 /* ---- Creation ---- */

@@ -1,6 +1,6 @@
 open Jest;
 
-let _ =
+let () =
   describe(
     "from float",
     ExpectJs.(
@@ -49,7 +49,7 @@ let _ =
     )
   );
 
-let _ =
+let () =
   describe(
     "from string",
     ExpectJs.(
@@ -89,7 +89,7 @@ let _ =
     )
   );
 
-let _ =
+let () =
   describe(
     "from array",
     ExpectJs.(
@@ -180,7 +180,7 @@ let _ =
     )
   );
 
-let _ =
+let () =
   describe(
     "from buffer",
     ExpectJs.(
@@ -209,7 +209,7 @@ let _ =
     )
   );
 
-let _ =
+let () =
   describe(
     "clone",
     ExpectJs.(

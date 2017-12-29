@@ -89,6 +89,39 @@ let cmp: (t, t) => Equality.t;
 /** Compares a float with a big number and returns the results of the comparison (equal, less than, greater). */
 let cmpn: (float, t) => Equality.t;
 
+/** Compares two unsigned big numbers and returns the results of the comparison (equal, less than, greater). */
+let ucmp: (t, t) => Equality.t;
+
+/** Takes a float and a big number and returns true if the second is greater than the first. */
+let gtn: (float, t) => bool;
+
+/** Takes two big numbers and returns true if the second is greater than the first. */
+let gt: (t, t) => bool;
+
+/** Takes a float and a big number and returns true if the second is greater or equal than the first. */
+let gten: (float, t) => bool;
+
+/** Takes two big numbers and returns true if the second is greater or equal than the first. */
+let gte: (t, t) => bool;
+
+/** Takes a float and a big number and returns true if the second is less than the first. */
+let ltn: (float, t) => bool;
+
+/** Takes two big numbers and returns true if the second is less than the first. */
+let lt: (t, t) => bool;
+
+/** Takes a float and a big number and returns true if the second is less or equal than the first. */
+let lten: (float, t) => bool;
+
+/** Takes two big numbers and returns true if the second is less or equal than the first. */
+let lte: (t, t) => bool;
+
+/** Takes a float and a big number and returns true if they are equal. */
+let eqn: (float, t) => bool;
+
+/** Takes two big numbers and returns true if they are equal. */
+let eq: (t, t) => bool;
+
 /** Returns the negative version of a big number. */
 let neg: t => t;
 
@@ -97,6 +130,30 @@ let ineg: t => unit;
 
 /** Returns true if the big number is negative. */
 let isNeg: t => bool;
+
+/** Returns true if the number is odd. */
+let isOdd: t => bool;
+
+/** Returns true if the number is even. */
+let isEven: t => bool;
+
+/** Returns true if the number is zero. */
+let isZero: t => bool;
+
+/** Returns the number of used bits in a big number. */
+let bitLength: t => int;
+
+/** Returns the number of used bytes in a big number. */
+let byteLength: t => int;
+
+/** Returns the two's complement of a given big number, with some width passed as first param. */
+let toTwos: (int, t) => t;
+
+/** Returns a big number from a given two's complement, with some width passed as first param. */
+let fromTwos: (int, t) => t;
+
+/** Returns the number of trailing zero bits in a big number. */
+let zeroBits: t => int;
 
 /** Returns the inverted value of the second param, modulo the first param. */
 let invm: (t, t) => t;
@@ -141,11 +198,17 @@ let min: (t, t) => t;
 /** Returns a big number represented as a number. */
 let toNumber: t => float;
 
+/** Returns a big number represented as a JSON compatible hex string (alias of toString(~base=16)) */
+let toJSON: t => string;
+
 /** Returns a big number represented as a string. */
-let toString: (~base: int=?, t) => string;
+let toString: (~base: int=?, ~padding: int=?, t) => string;
 
 /** Returns a big number represented as an array. */
 let toArray: (~endian: Endianness.t=?, ~length: int=?, t) => array(int);
+
+/** Returns a big number represented as a NodeJS Buffer. */
+let toBuffer: (~endian: Endianness.t=?, ~length: int=?, t) => Node.Buffer.t;
 
 /* Import */
 /** Creates a big number from a float. */
