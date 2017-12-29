@@ -7,7 +7,7 @@ type egcd_t = {
   gcd: t
 };
 
-/* Arithmetic */
+/* ------- Arithmetic ------- */
 /** Returns the addition of two big numbers. */
 let add: (t, t) => t;
 
@@ -164,6 +164,13 @@ let gcd: (t, t) => t;
 /** Returns the results of the extended greater common divisor ax + by = gcd(a, b). The result is a record with shape: { a: ..., b: ..., gcd: ... } */
 let egcd: (t, t) => egcd_t;
 
+/** Returns the max of two big numbers. */
+let max: (t, t) => t;
+
+/** Returns the min of two big numbers. */
+let min: (t, t) => t;
+
+/* ------- Binary ------- */
 /** Unsigned shift left n bits (first param) a big number (second param), storing the result in the same reference (side effect). */
 let iushln: (int, t) => unit;
 
@@ -188,13 +195,67 @@ let shrn: (int, t) => t;
 /** Returns the result of unsigned shifting right n bits (first param) a big number (second param). */
 let ushrn: (int, t) => t;
 
-/** Returns the max of two big numbers. */
-let max: (t, t) => t;
+/** Adds an int and the first word of a big number. */
+let andln: (int, t) => int;
 
-/** Returns the min of two big numbers. */
-let min: (t, t) => t;
+/** Increments at the bit position (first param), storing the result in the same reference (side effect). */
+let bincn: (int, t) => unit;
 
-/* Export */
+/** Tests if bit as position n (first param) is set */
+let testn: (int, t) => bool;
+
+/** Return only lowers bits of a big number, storing the result in the same reference (side effect). */
+let imaskn: (int, t) => unit;
+
+/** Return only lowers bits of a big number. */
+let maskn: (int, t) => t;
+
+/** Applies the binary unsigned `or` operation between two big numbers, storing the result in the second (side effect). */
+let iuor: (t, t) => unit;
+
+/** Applies the binary `or` operation between two big numbers, storing the result in the second (side effect). */
+let ior: (t, t) => unit;
+
+/** Returns the binary unsigned `or` operation between two big numbers. */
+let uor: (t, t) => t;
+
+/** Returns the binary `or` operation between two big numbers. */
+let or_: (t, t) => t;
+
+/** Applies the binary unsigned `and` operation between two big numbers, storing the result in the second (side effect). */
+let iuand: (t, t) => unit;
+
+/** Applies the binary `and` operation between two big numbers, storing the result in the second (side effect). */
+let iand: (t, t) => unit;
+
+/** Returns the binary unsigned `and` operation between two big numbers. */
+let uand: (t, t) => t;
+
+/** Returns the binary `and` operation between two big numbers. */
+let and_: (t, t) => t;
+
+/** Applies the binary unsigned `xor` operation between two big numbers, storing the result in the second (side effect). */
+let iuxor: (t, t) => unit;
+
+/** Applies the binary `xor` operation between two big numbers, storing the result in the second (side effect). */
+let ixor: (t, t) => unit;
+
+/** Returns the binary unsigned `xor` operation between two big numbers. */
+let uxor: (t, t) => t;
+
+/** Returns the binary `xor` operation between two big numbers. */
+let xor: (t, t) => t;
+
+/** Returns the binary `not` operation from a big numbers, taking a given bitwidth as first param, and storing the result in the second (side effect). */
+let inotn: (int, t) => unit;
+
+/** Returns the binary `not` operation from a big numbers, taking a given bitwidth as first param. */
+let notn: (int, t) => t;
+
+/** Sets the value passed as second param in the position passed as first param, storing the result in the big number passed as third param (side effect). */
+let setn: (int, bool, t) => unit;
+
+/* ------- Export ------- */
 /** Returns a big number represented as a number. */
 let toNumber: t => float;
 
@@ -210,7 +271,7 @@ let toArray: (~endian: Endianness.t=?, ~length: int=?, t) => array(int);
 /** Returns a big number represented as a NodeJS Buffer. */
 let toBuffer: (~endian: Endianness.t=?, ~length: int=?, t) => Node.Buffer.t;
 
-/* Import */
+/* ------- Import ------- */
 /** Creates a big number from a float. */
 let fromFloat: (~base: int=?, ~endian: Endianness.t=?, float) => t;
 
@@ -226,7 +287,7 @@ let fromBuffer: (~base: int=?, ~endian: Endianness.t=?, Node.Buffer.t) => t;
 /** Returns a new copy of a big number. */
 let clone: t => t;
 
-/* Utils */
+/* ------- Utils ------- */
 /** Copies the big number passed as first param into the big number passed as second param (side effect). */
 let copy: (t, t) => unit;
 

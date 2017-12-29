@@ -121,6 +121,10 @@ let ucmp = (a, b) => Equality.tFromJs(ucmp(a, b));
 
 let egcd = (a, b) => egcd_tFromJs(egcd(a, b));
 
+[@bs.module "bn.js"] external max : (t, t) => t = "";
+
+[@bs.module "bn.js"] external min : (t, t) => t = "";
+
 [@bs.send.pipe : t] external iushln : int => unit = "";
 
 [@bs.send.pipe : t] external ishln : int => unit = "";
@@ -137,9 +141,45 @@ let egcd = (a, b) => egcd_tFromJs(egcd(a, b));
 
 [@bs.send.pipe : t] external ushrn : int => t = "";
 
-[@bs.module "bn.js"] external max : (t, t) => t = "";
+[@bs.send.pipe : t] external andln : int => int = "";
 
-[@bs.module "bn.js"] external min : (t, t) => t = "";
+[@bs.send.pipe : t] external bincn : int => unit = "";
+
+[@bs.send.pipe : t] external testn : int => bool = "";
+
+[@bs.send.pipe : t] external imaskn : int => unit = "";
+
+[@bs.send.pipe : t] external maskn : int => t = "";
+
+[@bs.send.pipe : t] external iuor : t => unit = "";
+
+[@bs.send.pipe : t] external ior : t => unit = "";
+
+[@bs.send.pipe : t] external uor : t => t = "";
+
+[@bs.send.pipe : t] external or_ : t => t = "or";
+
+[@bs.send.pipe : t] external iuand : t => unit = "";
+
+[@bs.send.pipe : t] external iand : t => unit = "";
+
+[@bs.send.pipe : t] external uand : t => t = "";
+
+[@bs.send.pipe : t] external and_ : t => t = "and";
+
+[@bs.send.pipe : t] external iuxor : t => unit = "";
+
+[@bs.send.pipe : t] external ixor : t => unit = "";
+
+[@bs.send.pipe : t] external uxor : t => t = "";
+
+[@bs.send.pipe : t] external xor : t => t = "";
+
+[@bs.send.pipe : t] external inotn : int => unit = "";
+
+[@bs.send.pipe : t] external notn : int => t = "";
+
+[@bs.send.pipe : t] external setn : (int, bool) => unit = "";
 
 /* ---- Export ---- */
 /* To string */
