@@ -1,11 +1,4 @@
-type t;
-
-[@bs.deriving {jsConverter: newType}]
-type egcd_t = {
-  a: t,
-  b: t,
-  gcd: t
-};
+type t = Types.bn;
 
 /* ------- Arithmetic ------- */
 /** Returns the addition of two big numbers. */
@@ -162,7 +155,7 @@ let invm: (t, t) => t;
 let gcd: (t, t) => t;
 
 /** Returns the results of the extended greater common divisor ax + by = gcd(a, b). The result is a record with shape: { a: ..., b: ..., gcd: ... } */
-let egcd: (t, t) => egcd_t;
+let egcd: (t, t) => Types.egcd;
 
 /** Returns the max of two big numbers. */
 let max: (t, t) => t;
@@ -255,34 +248,6 @@ let notn: (int, t) => t;
 /** Sets the value passed as second param in the position passed as first param, storing the result in the big number passed as third param (side effect). */
 let setn: (int, bool, t) => unit;
 
-/* ------- Fast reduction ------- */
-/** Converts a big number to reduction engine instance. */
-let toRed: (Red.t, t) => Red.t;
-
-/** Returns a reduction engine instance using the Plain method. */
-let red: t => Red.t;
-
-/** Returns a reduction engine instance using the Montgomery method. */
-let mont: t => Red.t;
-
-/** Converts a reduction engine instance to a big number. */
-let fromRed: Red.t => t;
-
-/** Returns the addition of two instances of a reduction engine. */
-let redAdd: (Red.t, Red.t) => Red.t;
-
-/** Returns the subtraction of two instances of a reduction engine (the second minus the first). */
-let redSub: (Red.t, Red.t) => Red.t;
-
-/** Returns the addition of two instances of a reduction engine, storing the result in the big number passed as second param (side effect).  */
-let redIAdd: (Red.t, Red.t) => unit;
-
-/** Returns the subtraction of two instances of a reduction engine (the second minus the first), storing the result in the instance passed as second param (side effect).  */
-let redISub: (Red.t, Red.t) => unit;
-
-/** Returns a new copy of a reduction instance. */
-let cloneRed: Red.t => Red.t;
-
 /* ------- Export ------- */
 /** Returns a big number represented as a number. */
 let toNumber: t => float;
@@ -321,3 +286,63 @@ let copy: (t, t) => unit;
 
 /** For debugging purposes: prints a big number as a string (including structural information). */
 let inspect: t => string;
+
+/* ------- Fast reduction ------- */
+/** Returns a reduction context using the Plain method. */
+let red: t => Types.red_context;
+
+/** Returns a reduction context using the Montgomery method. */
+let mont: t => Types.red_context;
+
+/** Given a prime number, returns a reduction context using the Plain method. */
+let redWithPrime: Types.prime => Types.red_context;
+
+/** Given a prime number, returns a reduction context using the Montgomery method. */
+let montWithPrime: Types.prime => Types.red_context;
+
+/** Converts a big number to a reducted one, taking a reduction context as param. */
+let toRed: (Types.red_context, t) => Types.red;
+
+/** Converts a reducted big number to a regular big number. */
+let fromRed: Types.red => t;
+
+/** Returns the addition of two reducted big numbers. */
+let redAdd: (Types.red, Types.red) => Types.red;
+
+/** Adds two reducted big numbers, storing the result in the instance passed as second param (side effect).  */
+let redIAdd: (Types.red, Types.red) => unit;
+
+/** Returns the subtraction of two reducted big numbers (the second minus the first). */
+let redSub: (Types.red, Types.red) => Types.red;
+
+/** Subtracts two reducted big numbers (the second minus the first), storing the result in the instance passed as second param (side effect).  */
+let redISub: (Types.red, Types.red) => unit;
+
+/** Returns the result of shifting left n bits (first param) a reducted big number (second param). */
+let redShl: (int, Types.red) => Types.red;
+
+/** Returns the subtraction of two reducted big numbers.  */
+let redMul: (Types.red, Types.red) => Types.red;
+
+/** Returns the subtraction of two reducted big numbers, storing the result in the instance passed as second param (side effect). */
+let redIMul: (Types.red, Types.red) => unit;
+
+/** Returns the square root of a reducted big number. */
+let redSqr: Types.red => Types.red;
+
+/** Applies the square root of a reducted big number, storing the result in the same instance passed as param (side effect). */
+let redISqr: Types.red => unit;
+
+/** Returns the square root modulo reduction context's prime of a reducted big number. */
+let redSqrt: Types.red => Types.red;
+
+/** Returns the modular inverse of a reducted big number. */
+let redInvm: Types.red => Types.red;
+
+/** Returns the negative version of a reducted big number. */
+let redNeg: Types.red => Types.red;
+
+/** Returns the power, considering the first param as exponent (regular big number) and the second as base (reducted big number). */
+let redPow: (t, Types.red) => Types.red;
+
+

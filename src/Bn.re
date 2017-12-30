@@ -1,13 +1,4 @@
-type t = Types.bn_t;
-
-type red_t = Types.red_t;
-
-[@bs.deriving {jsConverter: newType}]
-type egcd_t = {
-  a: t,
-  b: t,
-  gcd: t
-};
+type t = Types.bn;
 
 /* ---- Arithmetic ---- */
 /* Add */
@@ -119,9 +110,9 @@ let ucmp = (a, b) => Equality.tFromJs(ucmp(a, b));
 
 [@bs.send.pipe : t] external gcd : t => t = "";
 
-[@bs.send.pipe : t] external egcd : t => abs_egcd_t = "";
+[@bs.send.pipe : t] external egcd : t => Types.abs_egcd = "";
 
-let egcd = (a, b) => egcd_tFromJs(egcd(a, b));
+let egcd = (a, b) => Types.egcdFromJs(egcd(a, b));
 
 [@bs.module "bn.js"] external max : (t, t) => t = "";
 
@@ -184,7 +175,7 @@ let egcd = (a, b) => egcd_tFromJs(egcd(a, b));
 [@bs.send.pipe : t] external setn : (int, bool) => unit = "";
 
 /* ---- Fast reduction ---- */
-[@bs.send.pipe : t] external toRed : Red.t => Red.t = "";
+[@bs.send.pipe : t] external toRed : Types.red_context => Types.red = "";
 
 /* ---- Export ---- */
 /* To string */
@@ -359,9 +350,4 @@ let fromBuffer = (~base=?, ~endian=?, v) =>
 
 [@bs.module "bn.js"] [@bs.new] external inspect : t => string = "BN";
 
-include
-  Red.Impl(
-    {
-      type nonrec t = t;
-    }
-  );
+include Red;
