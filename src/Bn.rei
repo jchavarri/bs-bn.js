@@ -255,6 +255,34 @@ let notn: (int, t) => t;
 /** Sets the value passed as second param in the position passed as first param, storing the result in the big number passed as third param (side effect). */
 let setn: (int, bool, t) => unit;
 
+/* ------- Fast reduction ------- */
+/** Converts a big number to reduction engine instance. */
+let toRed: (Red.t, t) => Red.t;
+
+/** Returns a reduction engine instance using the Plain method. */
+let red: t => Red.t;
+
+/** Returns a reduction engine instance using the Montgomery method. */
+let mont: t => Red.t;
+
+/** Converts a reduction engine instance to a big number. */
+let fromRed: Red.t => t;
+
+/** Returns the addition of two instances of a reduction engine. */
+let redAdd: (Red.t, Red.t) => Red.t;
+
+/** Returns the subtraction of two instances of a reduction engine (the second minus the first). */
+let redSub: (Red.t, Red.t) => Red.t;
+
+/** Returns the addition of two instances of a reduction engine, storing the result in the big number passed as second param (side effect).  */
+let redIAdd: (Red.t, Red.t) => unit;
+
+/** Returns the subtraction of two instances of a reduction engine (the second minus the first), storing the result in the instance passed as second param (side effect).  */
+let redISub: (Red.t, Red.t) => unit;
+
+/** Returns a new copy of a reduction instance. */
+let cloneRed: Red.t => Red.t;
+
 /* ------- Export ------- */
 /** Returns a big number represented as a number. */
 let toNumber: t => float;

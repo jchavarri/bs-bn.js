@@ -1,4 +1,6 @@
-type t;
+type t = Types.bn_t;
+
+type red_t = Types.red_t;
 
 [@bs.deriving {jsConverter: newType}]
 type egcd_t = {
@@ -181,6 +183,9 @@ let egcd = (a, b) => egcd_tFromJs(egcd(a, b));
 
 [@bs.send.pipe : t] external setn : (int, bool) => unit = "";
 
+/* ---- Fast reduction ---- */
+[@bs.send.pipe : t] external toRed : Red.t => Red.t = "";
+
 /* ---- Export ---- */
 /* To string */
 [@bs.send] external toNumber : t => float = "";
@@ -353,3 +358,10 @@ let fromBuffer = (~base=?, ~endian=?, v) =>
 [@bs.module "bn.js"] [@bs.new] external copy : (t, t) => unit = "BN";
 
 [@bs.module "bn.js"] [@bs.new] external inspect : t => string = "BN";
+
+include
+  Red.Impl(
+    {
+      type nonrec t = t;
+    }
+  );
