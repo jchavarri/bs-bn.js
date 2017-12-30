@@ -49,3 +49,7 @@ let b = a |> Bn.abs |> Bn.mul(Bn.fromFloat(3.));
 ### Full API
 
 Check the interface file [`Bn.rei`](https://github.com/jchavarri/bs-bn.js/blob/master/src/Bn.rei).
+
+### TODO
+
+- Explore adding infix operators: `let result = Bn.Infix.(bn1 + bn2);`
